@@ -80,12 +80,14 @@ class View:
         ###
         #Store the username and partner_name into the instance.
         ###
-
+        self.user = username
+        self.partner = partner_name
         ###
         #Make a new client object and store it in this instance of View
         #(i.e. self).  The name of the instance should be my_client
         ###
-
+        my_client = Client()
+        self.client = my_client
         ###
         #Set screen dimensions using turtle.setup
         #You can get help on this function, as with other turtle functions,
