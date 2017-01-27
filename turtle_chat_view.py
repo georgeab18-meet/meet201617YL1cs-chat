@@ -9,7 +9,9 @@
 #Finally, from the turtle_chat_widgets module, import two classes: Button and TextInput
 #####################################################################################
 #####################################################################################
-
+import turtle
+from turtle_chat_client import Client
+from turtle_chat_widgets import Button,TextInput
 #####################################################################################
 #                                   TextBox                                         #
 #####################################################################################
@@ -37,7 +39,32 @@
 #   \r to your string.  Test it out at the Python shell for practice
 #####################################################################################
 #####################################################################################
-
+class TextBox(TextInput):
+    def draw_box():
+        self.drawer = turtle.clone()
+        self.drawer.hideturtle()
+        self.drawer.penup()
+        self.drawer.goto(self.pos)
+        self.drawer.pendown()
+        self.drawer.goto(self.drawer.xcor()+self.width,self.drawer.ycor())
+        self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()-self.height)
+        self.drawer.goto(self.drawer.xcor()-self.width,self.drawer.ycor())
+        self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()+self.height)
+    def write_msg():
+        self.drawer = turtle.clone()
+        self.drawer.hideturtle()
+        self.drawer.penup()
+        self.drawer.goto(self.pos)
+        self.drawer.pendown()
+        self.drawer.fill_color("white")
+        self.drawer.begin_fill()
+        self.drawer.goto(self.drawer.xcor()+self.width,self.drawer.ycor())
+        self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()-self.height)
+        self.drawer.goto(self.drawer.xcor()-self.width,self.drawer.ycor())
+        self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()+self.height)
+        self.drawer.end_fill()
+        self.writer.goto(-self.width/2+10+self.pos[0],self.pos[1]-self.height/2+20)
+        self.writer.write(new_msg)
 #####################################################################################
 #                                  SendButton                                       #
 #####################################################################################
@@ -56,7 +83,24 @@
 #####################################################################################
 #####################################################################################
 
-
+class SendButton(Button):
+    def __init__(self,my_turtle=None,shape=None,pos=(0,0),view=None):
+        if view == None:
+            my_view = View("Me","Partner")
+            self.view = my_view
+        else:
+            self.view = view
+        if my_turtle == None:
+            my_turtle = turtle.clone()
+            self.turtle = my_turtle
+        else:
+            self.turtle = my_turtle
+    def fun():
+        self.view.client.send(new_msg)
+        self.view.message_queue.insert(0,"Me: \r"+new_msg)
+        
+        
+        
 ##################################################################
 #                             View                               #
 ##################################################################
@@ -98,7 +142,7 @@ class View:
         #
         #at the Python shell.
         ###
-
+        turtle.setup(300,600)
         ###
         #This list will store all of the messages.
         #You can add strings to the front of the list using
@@ -113,7 +157,8 @@ class View:
         #You can use the clear() and write() methods to erase
         #and write messages for each
         ###
-
+        for i in msg_queue:
+            i.turtle = turtle.clone()
         ###
         #Create a TextBox instance and a SendButton instance and
         #Store them inside of this instance
@@ -134,6 +179,7 @@ class View:
         It should call self.display_msg() to cause the message
         display to be updated.
         '''
+        self.client.send(
         pass
 
     def get_msg(self):
