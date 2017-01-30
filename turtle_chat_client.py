@@ -50,7 +50,7 @@ class Client:
             print('Connected to '+self.hostname+' at port, '+str(self.port) +'. You can start sending messages.')
         except Exception as err:
             print('Unable to connect to '+self.hostname+' at port '+str(self.port))
-            raise(err) #Give error to user for debugging purposes
+            #Give error to user for debugging purposes
             #sys.exit() #When debugging is done, you can do this, instead of raising error.
 
     def send(self, msg):

@@ -10,6 +10,8 @@
 #####################################################################################
 #####################################################################################
 import turtle
+turtle.hideturtle()
+turtle.penup()
 from turtle_chat_client import Client
 from turtle_chat_widgets import Button,TextInput
 #####################################################################################
@@ -111,12 +113,13 @@ class SendButton(Button):
 ##################################################################
 ##################################################################
 class View:
-    _MSG_LOG_LENGTH=5 #Number of messages to retain in view
-    _SCREEN_WIDTH=300
-    _SCREEN_HEIGHT=600
-    _LINE_SPACING=round(_SCREEN_HEIGHT/2/(_MSG_LOG_LENGTH+1))
+    
 
-    def __init__(self,username='Me',partner_name='Partner'):
+    def __init__(self,username='Amazing Me',partner_name='Partner'):
+        _MSG_LOG_LENGTH=5 #Number of messages to retain in view
+        _SCREEN_WIDTH=300
+        _SCREEN_HEIGHT=600
+        _LINE_SPACING=round(_SCREEN_HEIGHT/2/(_MSG_LOG_LENGTH+1))
         '''
         :param username: the name of this chat user
         :param partner_name: the name of the user you are chatting with
@@ -124,6 +127,7 @@ class View:
         ###
         #Store the username and partner_name into the instance.
         ###
+        
         self.user = username
         self.partner = partner_name
         ###
@@ -157,8 +161,13 @@ class View:
         #You can use the clear() and write() methods to erase
         #and write messages for each
         ###
-        for i in msg_queue:
-            i.turtle = turtle.clone()
+        self.msg_queue_turtles = list()
+        for i in range(4):
+            self.msg_queue_turtles.append(turtle.clone())
+        for tutu in range(4):
+            self.msg_queue_turtles[tutu].hideturtle()
+            self.msg_queue_turtles[tutu].penup()
+            self.msg_queue_turtles[tutu].goto(-100,tutu*(_LINE_SPACING))
         ###
         #Create a TextBox instance and a SendButton instance and
         #Store them inside of this instance
@@ -179,8 +188,11 @@ class View:
         It should call self.display_msg() to cause the message
         display to be updated.
         '''
-        self.client.send(
-        pass
+        self.client.send(new_msg)
+        for i in range(4):
+            self.msg_queue_turtles[i].clear()
+        for t in range(4):
+            self.msg_queue_turtles[tutu].write(self.msg_queue[tutu])
 
     def get_msg(self):
         return self.textbox.get_msg()
@@ -210,7 +222,7 @@ class View:
                     - this should be displayed on the screen
         '''
         print(msg) #Debug - print message
-        show_this_msg=self.partner_name+' says:\r'+ msg
+        show_this_msg=self.partner+' says:\r'+ msg
         #Add the message to the queue either using insert (to put at the beginning)
         #or append (to put at the end).
         #
@@ -224,7 +236,7 @@ class View:
         pass
 
     def get_client(self):
-        return self.my_client
+        return self.client
 ##############################################################
 ##############################################################
 
