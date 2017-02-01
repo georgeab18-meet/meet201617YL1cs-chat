@@ -51,7 +51,7 @@ class Client:
         except Exception as err:
             print('Unable to connect to '+self.hostname+' at port '+str(self.port))
             #Give error to user for debugging purposes
-            #sys.exit() #When debugging is done, you can do this, instead of raising error.
+            sys.exit() #When debugging is done, you can do this, instead of raising error.
 
     def send(self, msg):
         '''

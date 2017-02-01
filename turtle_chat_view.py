@@ -1,5 +1,5 @@
 #2016-2017 PERSONAL PROJECTS: TurtleChat!
-#WRITE YOUR NAME HERE!
+#The Amazing george Abu Dauod (so modest...)
 
 #####################################################################################
 #                                   IMPORTS                                         #
@@ -42,7 +42,7 @@ from turtle_chat_widgets import Button,TextInput
 #####################################################################################
 #####################################################################################
 class TextBox(TextInput):
-    def draw_box():
+    def draw_box(self):
         self.drawer = turtle.clone()
         self.drawer.hideturtle()
         self.drawer.penup()
@@ -52,8 +52,8 @@ class TextBox(TextInput):
         self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()-self.height)
         self.drawer.goto(self.drawer.xcor()-self.width,self.drawer.ycor())
         self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()+self.height)
-    def write_msg():
-        self.drawer = turtle.clone()
+    def write_msg(self):
+        '''self.drawer = turtle.clone()
         self.drawer.hideturtle()
         self.drawer.penup()
         self.drawer.goto(self.pos)
@@ -64,9 +64,10 @@ class TextBox(TextInput):
         self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()-self.height)
         self.drawer.goto(self.drawer.xcor()-self.width,self.drawer.ycor())
         self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()+self.height)
-        self.drawer.end_fill()
+        self.drawer.end_fill()'''
+        self.writer.clear()
         self.writer.goto(-self.width/2+10+self.pos[0],self.pos[1]-self.height/2+20)
-        self.writer.write(new_msg)
+        self.writer.write(self.msg)
 #####################################################################################
 #                                  SendButton                                       #
 #####################################################################################
@@ -97,9 +98,9 @@ class SendButton(Button):
             self.turtle = my_turtle
         else:
             self.turtle = my_turtle
-    def fun():
-        self.view.client.send(new_msg)
-        self.view.message_queue.insert(0,"Me: \r"+new_msg)
+    def fun(msg):
+        self.view.client.send(msg)
+        self.view.message_queue.insert(0,"Me: \r"+msg)
         
         
         
@@ -127,7 +128,9 @@ class View:
         ###
         #Store the username and partner_name into the instance.
         ###
-        
+        self.textbox = TextBox()
+        self.textbox.draw_box()
+        self.butt = SendButton()
         self.user = username
         self.partner = partner_name
         ###
@@ -188,7 +191,7 @@ class View:
         It should call self.display_msg() to cause the message
         display to be updated.
         '''
-        self.client.send(new_msg)
+        self.client.send(self.textbox.new_msg)
         for i in range(4):
             self.msg_queue_turtles[i].clear()
         for t in range(4):
@@ -210,7 +213,7 @@ class View:
 
         Then, it can call turtle.listen()
         '''
-        pass
+        turtle.listen()
 
     def msg_received(self,msg):
         '''
@@ -221,11 +224,15 @@ class View:
         :param msg: a string containing the message received
                     - this should be displayed on the screen
         '''
-        print(msg) #Debug - print message
+        #print(msg) #Debug - print message
         show_this_msg=self.partner+' says:\r'+ msg
+        self.msg_queue.insert(0,show_this_msg)
         #Add the message to the queue either using insert (to put at the beginning)
         #or append (to put at the end).
-        #
+        for i in range(4):
+            self.msg_queue_turtles[i].clear()
+        for t in range(4):
+            self.msg_queue_turtles[tutu].write(self.msg_queue[tutu])
         #Then, call the display_msg method to update the display
 
     def display_msg(self):
