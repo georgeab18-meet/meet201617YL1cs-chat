@@ -86,7 +86,7 @@ class TextBox(TextInput):
 #####################################################################################
 
 class SendButton(Button):
-    def __init__(self,my_turtle=None,shape=None,pos=(0,0),view=None):
+    def __init__(self,my_turtle=None,shape=None,pos=(0,-250),view=None):
         if view == None:
             my_view = View("Me","Partner")
             self.view = my_view
@@ -113,8 +113,9 @@ class SendButton(Button):
         self.turtle.onclick(self.fun) #Link listener to button function
         turtle.listen() #Start listener
     def fun(self,x = None, y = None):
-        self.view.send_msg()
         self.view.msg_queue.insert(0,"Me: \r"+self.view.textbox.new_msg)
+        self.view.send_msg()
+        self.view.textbox.writer.clear()
         
         
         
@@ -168,7 +169,7 @@ class View:
         #or at the end of the list using
         #   self.msg_queue.append(a_msg_string)
         self.butt = SendButton(view = self)
-        self.textbox = TextBox()
+        self.textbox = TextBox(view = self)
         self.textbox.draw_box()
         self.msg_queue=[]
         ###
@@ -207,11 +208,8 @@ class View:
         display to be updated.
         '''
         self.client.send(self.textbox.new_msg)
-        for i in range(4):
-            self.msg_queue_turtles[i].clear()
-        for t in range(4):
-            self.msg_queue_turtles[t].write(self.msg_queue[t])
-        self.clear_msg()
+        self.display_msg()
+        self.textbox.clear_msg()
 
     def get_msg(self):
         return self.textbox.get_msg()
@@ -241,14 +239,11 @@ class View:
                     - this should be displayed on the screen
         '''
         #print(msg) #Debug - print message
-        show_this_msg=self.partner+' says:\r'+ msg
+        show_this_msg=self.partner_name+' says:\r'+ msg
         self.msg_queue.insert(0,show_this_msg)
         #Add the message to the queue either using insert (to put at the beginning)
         #or append (to put at the end).
-        for i in range(4):
-            self.msg_queue_turtles[i].clear()
-        for t in range(4):
-            self.msg_queue_turtles[tutu].write(self.msg_queue[tutu])
+       self.display_msg()
         #Then, call the display_msg method to update the display
 
     def display_msg(self):
@@ -256,7 +251,10 @@ class View:
         This method should update the messages displayed in the screen.
         You can get the messages you want from self.msg_queue
         '''
-        pass
+         for i in range(4):
+            self.msg_queue_turtles[i].clear()
+        for t in range(4):
+            self.msg_queue_turtles[t].write(self.msg_queue[t])
 
     def get_client(self):
         return self.client
