@@ -63,7 +63,7 @@ class TextInput(metaclass=ABCMeta):
     This class sets up a textbox to take live text input from
     the user via keyboard listeners.
     '''
-    def __init__(self, width=200, height=100, pos=(-100,-100), background_gif=None, letters_per_line=40):
+    def __init__(self, width=200, height=100, pos=(-100,-100), background_gif=None, letters_per_line=40,view = None):
         '''
         Initialize TextInput object.
 
@@ -77,6 +77,11 @@ class TextInput(metaclass=ABCMeta):
                                Default=None.
         :param letters_per_line: integer, number of letters per line.
         '''
+        if view == None:
+            my_view = View("Me","Partner")
+            self.view = my_view
+        else:
+            self.view = view
         self.width=width
         self.height=height
         self.letters_per_line=letters_per_line
@@ -138,6 +143,7 @@ class TextInput(metaclass=ABCMeta):
 
         #To find text key names, you can refer to
         #http://www.tcl.tk/man/tcl8.4/TkCmd/keysyms.htm
+        turtle.onkeypress( self.send,"Return")
         #Numbers
         turtle.onkeypress( self.add_0, '0' )
         turtle.onkeypress( self.add_1, '1' )
@@ -607,3 +613,7 @@ class TextInput(metaclass=ABCMeta):
         self.new_msg+='9'
         self.write_msg()
         print(self.new_msg)
+    def send(self):
+        self.view.msg_queue.insert(0,"Me: \r"+self.view.textbox.new_msg)
+        self.view.send_msg()
+        self.writer.clear()
