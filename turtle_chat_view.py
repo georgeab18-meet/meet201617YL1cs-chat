@@ -58,16 +58,15 @@ class TextBox(TextInput):
         self.drawer.penup()
         self.drawer.goto(self.pos)
         self.drawer.pendown()
-        self.drawer.fill_color("white")
+        self.drawer.color("black","white")
         self.drawer.begin_fill()
         self.drawer.goto(self.drawer.xcor()+self.width,self.drawer.ycor())
         self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()-self.height)
         self.drawer.goto(self.drawer.xcor()-self.width,self.drawer.ycor())
         self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()+self.height)
         self.drawer.end_fill()'''
-        self.writer.clear()
-        self.writer.goto(-self.width/2+10+self.pos[0],self.pos[1]-self.height/2+20)
-        self.writer.write(self.msg)
+        self.writer.clear()    
+        self.writer.write(self.new_msg)
 #####################################################################################
 #                                  SendButton                                       #
 #####################################################################################
@@ -93,14 +92,29 @@ class SendButton(Button):
             self.view = my_view
         else:
             self.view = view
-        if my_turtle == None:
-            my_turtle = turtle.clone()
-            self.turtle = my_turtle
+        if my_turtle is None :
+            #If no turtle given, create new one
+            self.turtle=turtle.clone()
         else:
-            self.turtle = my_turtle
-    def fun(msg):
-        self.view.client.send(msg)
-        self.view.message_queue.insert(0,"Me: \r"+msg)
+            self.turtle=my_turtle
+
+        self.turtle.speed(0)
+        self.turtle.hideturtle()
+        self.turtle.penup()
+        self.turtle.goto(pos)
+
+        if shape is None:
+            self.turtle.shape('square')
+            self.turtle.shapesize(2,10)
+        else:
+            turtle.addshape(shape)
+            self.turtle.shape(shape)
+        self.turtle.showturtle()
+        self.turtle.onclick(self.fun) #Link listener to button function
+        turtle.listen() #Start listener
+    def fun(self,x = None, y = None):
+        self.view.send_msg()
+        self.view.msg_queue.insert(0,"Me: \r"+self.view.textbox.new_msg)
         
         
         
@@ -128,9 +142,6 @@ class View:
         ###
         #Store the username and partner_name into the instance.
         ###
-        self.textbox = TextBox()
-        self.textbox.draw_box()
-        self.butt = SendButton()
         self.user = username
         self.partner = partner_name
         ###
@@ -156,6 +167,9 @@ class View:
         #   self.msg_queue.insert(0,a_msg_string)
         #or at the end of the list using
         #   self.msg_queue.append(a_msg_string)
+        self.butt = SendButton(view = self)
+        self.textbox = TextBox()
+        self.textbox.draw_box()
         self.msg_queue=[]
         ###
 
@@ -166,6 +180,7 @@ class View:
         ###
         self.msg_queue_turtles = list()
         for i in range(4):
+            self.msg_queue.insert(i,"")
             self.msg_queue_turtles.append(turtle.clone())
         for tutu in range(4):
             self.msg_queue_turtles[tutu].hideturtle()
@@ -195,7 +210,8 @@ class View:
         for i in range(4):
             self.msg_queue_turtles[i].clear()
         for t in range(4):
-            self.msg_queue_turtles[tutu].write(self.msg_queue[tutu])
+            self.msg_queue_turtles[t].write(self.msg_queue[t])
+        self.clear_msg()
 
     def get_msg(self):
         return self.textbox.get_msg()
