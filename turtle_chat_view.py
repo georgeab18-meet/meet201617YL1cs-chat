@@ -243,7 +243,7 @@ class View:
         self.msg_queue.insert(0,show_this_msg)
         #Add the message to the queue either using insert (to put at the beginning)
         #or append (to put at the end).
-       self.display_msg()
+        self.display_msg()
         #Then, call the display_msg method to update the display
 
     def display_msg(self):
@@ -251,7 +251,7 @@ class View:
         This method should update the messages displayed in the screen.
         You can get the messages you want from self.msg_queue
         '''
-         for i in range(4):
+        for i in range(4):
             self.msg_queue_turtles[i].clear()
         for t in range(4):
             self.msg_queue_turtles[t].write(self.msg_queue[t])
