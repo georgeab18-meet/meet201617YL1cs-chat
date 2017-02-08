@@ -65,8 +65,20 @@ class TextBox(TextInput):
         self.drawer.goto(self.drawer.xcor()-self.width,self.drawer.ycor())
         self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()+self.height)
         self.drawer.end_fill()'''
-        self.writer.clear()    
-        self.writer.write(self.new_msg)
+        self.writer.clear()
+        if len(self.new_msg) < self.letts:
+            self.writer.write(self.new_msg, align = 'center')
+        else:
+            for l in range(int(len(self.new_msg)/self.letts)+1):
+                if l < int(len(self.new_msg)/self.letts):
+                    self.writer.goto(self.writer.xcor(),self.ax-(l*10))
+                    self.writer.write(self.new_msg[(l*self.letts):((l+1)*self.letts)], align = 'center' )
+                    
+                else:
+                    self.writer.goto(self.writer.xcor(),self.ax-(l*10))
+                    self.writer.write(self.new_msg[(l*self.letts):len(self.new_msg)], align = 'center')
+                
+                              
 #####################################################################################
 #                                  SendButton                                       #
 #####################################################################################
@@ -113,7 +125,38 @@ class SendButton(Button):
         self.turtle.onclick(self.fun) #Link listener to button function
         turtle.listen() #Start listener
     def fun(self,x = None, y = None):
-        self.view.msg_queue.insert(0,"Me: \r"+self.view.textbox.new_msg)
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<3",str(chr(9829)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace(":)",str(chr(9786)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace(":(",str(chr(9785)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<flower1>",str(chr(10047)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<flower2>",str(chr(10048)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<flower3>",str(chr(10049)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<snow>",str(chr(10052)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<cross1>",str(chr(10013)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<cross2>",str(chr(10014)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<cross3>",str(chr(10015)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<star>",str(chr(11088)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<=>",str(chr(10234)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("=>",str(chr(10233)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<=",str(chr(10232)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music1>",str(chr(9833)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music2>",str(chr(9834)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music3>",str(chr(9835)))
+        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music4>",str(chr(9836)))
+        if len(self.view.textbox.new_msg) < self.view.textbox.letts:
+            self.view.msg_queue.insert(0,"Me: \r"+self.view.textbox.new_msg)
+        else:
+            to_insert = ' '
+            for l in range(int(len(self.view.textbox.new_msg)/self.view.textbox.letts)+1):
+                if l < int(len(self.view.textbox.new_msg)/self.view.textbox.letts):
+            
+                    to_insert+=self.view.textbox.new_msg[(l*self.view.textbox.letts):((l+1)*self.view.textbox.letts)] + " \r"
+                    
+                else:
+                    
+                    to_insert+=self.view.textbox.new_msg[(l*self.view.textbox.letts):len(self.view.textbox.new_msg)]+ " \r"
+            self.view.msg_queue.insert(0,"Me: \r"+to_insert)
+        
         self.view.send_msg()
         self.view.textbox.writer.clear()
         
@@ -132,7 +175,7 @@ class View:
     
 
     def __init__(self,username='Amazing Me',partner_name='Partner'):
-        _MSG_LOG_LENGTH=5 #Number of messages to retain in view
+        _MSG_LOG_LENGTH=3 #Number of messages to retain in view
         _SCREEN_WIDTH=300
         _SCREEN_HEIGHT=600
         _LINE_SPACING=round(_SCREEN_HEIGHT/2/(_MSG_LOG_LENGTH+1))
@@ -171,6 +214,8 @@ class View:
         self.butt = SendButton(view = self)
         self.textbox = TextBox(view = self)
         self.textbox.draw_box()
+        self.textbox.lang = 'ARB'
+        self.textbox.setup_listeners()
         self.msg_queue=[]
         ###
 
@@ -239,7 +284,7 @@ class View:
                     - this should be displayed on the screen
         '''
         #print(msg) #Debug - print message
-        show_this_msg=self.partner_name+' says:\r'+ msg
+        show_this_msg=self.partner+' says:\r'+ msg
         self.msg_queue.insert(0,show_this_msg)
         #Add the message to the queue either using insert (to put at the beginning)
         #or append (to put at the end).
@@ -254,7 +299,7 @@ class View:
         for i in range(4):
             self.msg_queue_turtles[i].clear()
         for t in range(4):
-            self.msg_queue_turtles[t].write(self.msg_queue[t])
+            self.msg_queue_turtles[t].write(self.msg_queue[t],font=('Arial',15,'normal'))
 
     def get_client(self):
         return self.client
@@ -267,11 +312,12 @@ class View:
 #it once you have a working view, trying to run you chat#
 #view in different ways.                                #
 #########################################################
-if __name__ == '__main__':
-    my_view=View()
-    _WAIT_TIME=200 #Time between check for new message, ms
+
+my_view=View()
+_WAIT_TIME=200 #Time between check for new message, ms
+if __name__=="__main__":
     def check() :
-        #msg_in=my_view.my_client.receive()
+        msg_in=my_view.client.receive()
         msg_in=my_view.get_client().receive()
         if not(msg_in is None):
             if msg_in==Client._END_MSG:
