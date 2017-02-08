@@ -63,7 +63,7 @@ class TextInput(metaclass=ABCMeta):
     This class sets up a textbox to take live text input from
     the user via keyboard listeners.
     '''
-    def __init__(self, width=200, height=100, pos=(-100,-100), background_gif=None, letters_per_line=40,view = None):
+    def __init__(self, width=200, height=100, pos=(-100,-100), background_gif=None, letters_per_line=25,view = None):
         '''
         Initialize TextInput object.
 
@@ -77,6 +77,8 @@ class TextInput(metaclass=ABCMeta):
                                Default=None.
         :param letters_per_line: integer, number of letters per line.
         '''
+        self.lang = 'ARB'
+        self.letts = letters_per_line
         if view == None:
             my_view = View("Me","Partner")
             self.view = my_view
@@ -89,11 +91,13 @@ class TextInput(metaclass=ABCMeta):
         self.new_msg='' #This string stores text stream going into text ox.
         self.pos=pos
         self.writer=turtle.clone()
+        
         self.writer.hideturtle()
         self.writer.penup()
+        self.writer.speed(0)
         #Move writer to location where text starts.
-        self.writer.goto(self.pos[0]+10,self.pos[1]-10)
-
+        self.writer.goto(self.pos[0]+100,self.pos[1]-20)
+        self.ax = self.writer.ycor()
         #Setup listeners
         self.setup_listeners()
         #Draw box to surround text field
@@ -192,61 +196,98 @@ class TextInput(metaclass=ABCMeta):
         turtle.onkeypress( self.add_brackleft,'bracketleft')
 
         #Lower-case letters
-        turtle.onkeypress( self.add_a, 'a' )
-        turtle.onkeypress( self.add_b, 'b' )
-        turtle.onkeypress( self.add_c, 'c' )
-        turtle.onkeypress( self.add_d, 'd' )
-        turtle.onkeypress( self.add_e, 'e' )
-        turtle.onkeypress( self.add_f, 'f' )
-        turtle.onkeypress( self.add_g, 'g' )
-        turtle.onkeypress( self.add_h, 'h' )
-        turtle.onkeypress( self.add_i, 'i' )
-        turtle.onkeypress( self.add_j, 'j' )
-        turtle.onkeypress( self.add_k, 'k' )
-        turtle.onkeypress( self.add_l, 'l' )
-        turtle.onkeypress( self.add_m, 'm' )
-        turtle.onkeypress( self.add_n, 'n' )
-        turtle.onkeypress( self.add_o, 'o' )
-        turtle.onkeypress( self.add_p, 'p' )
-        turtle.onkeypress( self.add_q, 'q' )
-        turtle.onkeypress( self.add_r, 'r' )
-        turtle.onkeypress( self.add_s, 's' )
-        turtle.onkeypress( self.add_t, 't' )
-        turtle.onkeypress( self.add_u, 'u' )
-        turtle.onkeypress( self.add_v, 'v' )
-        turtle.onkeypress( self.add_w, 'w' )
-        turtle.onkeypress( self.add_x, 'x' )
-        turtle.onkeypress( self.add_y, 'y' )
-        turtle.onkeypress( self.add_z, 'z' )
-
-        #Upper-case letters
-        turtle.onkeypress( self.add_A, 'A' )
-        turtle.onkeypress( self.add_B, 'B' )
-        turtle.onkeypress( self.add_C, 'C' )
-        turtle.onkeypress( self.add_D, 'D' )
-        turtle.onkeypress( self.add_E, 'E' )
-        turtle.onkeypress( self.add_F, 'F' )
-        turtle.onkeypress( self.add_G, 'G' )
-        turtle.onkeypress( self.add_H, 'H' )
-        turtle.onkeypress( self.add_I, 'I' )
-        turtle.onkeypress( self.add_J, 'J' )
-        turtle.onkeypress( self.add_K, 'K' )
-        turtle.onkeypress( self.add_L, 'L' )
-        turtle.onkeypress( self.add_M, 'M' )
-        turtle.onkeypress( self.add_N, 'N' )
-        turtle.onkeypress( self.add_O, 'O' )
-        turtle.onkeypress( self.add_P, 'P' )
-        turtle.onkeypress( self.add_Q, 'Q' )
-        turtle.onkeypress( self.add_R, 'R' )
-        turtle.onkeypress( self.add_S, 'S' )
-        turtle.onkeypress( self.add_T, 'T' )
-        turtle.onkeypress( self.add_U, 'U' )
-        turtle.onkeypress( self.add_V, 'V' )
-        turtle.onkeypress( self.add_W, 'W' )
-        turtle.onkeypress( self.add_X, 'X' )
-        turtle.onkeypress( self.add_Y, 'Y' )
-        turtle.onkeypress( self.add_Z, 'Z' )
-
+        if self.lang == "ENG":
+            turtle.onkeypress( self.add_a, 'a' )
+            turtle.onkeypress( self.add_b, 'b' )
+            turtle.onkeypress( self.add_c, 'c' )
+            turtle.onkeypress( self.add_d, 'd' )
+            turtle.onkeypress( self.add_e, 'e' )
+            turtle.onkeypress( self.add_f, 'f' )
+            turtle.onkeypress( self.add_g, 'g' )
+            turtle.onkeypress( self.add_h, 'h' )
+            turtle.onkeypress( self.add_i, 'i' )
+            turtle.onkeypress( self.add_j, 'j' )
+            turtle.onkeypress( self.add_k, 'k' )
+            turtle.onkeypress( self.add_l, 'l' )
+            turtle.onkeypress( self.add_m, 'm' )
+            turtle.onkeypress( self.add_n, 'n' )
+            turtle.onkeypress( self.add_o, 'o' )
+            turtle.onkeypress( self.add_p, 'p' )
+            turtle.onkeypress( self.add_q, 'q' )
+            turtle.onkeypress( self.add_r, 'r' )
+            turtle.onkeypress( self.add_s, 's' )
+            turtle.onkeypress( self.add_t, 't' )
+            turtle.onkeypress( self.add_u, 'u' )
+            turtle.onkeypress( self.add_v, 'v' )
+            turtle.onkeypress( self.add_w, 'w' )
+            turtle.onkeypress( self.add_x, 'x' )
+            turtle.onkeypress( self.add_y, 'y' )
+            turtle.onkeypress( self.add_z, 'z' )
+    
+            #Upper-case letters
+            turtle.onkeypress( self.add_A, 'A' )
+            turtle.onkeypress( self.add_B, 'B' )
+            turtle.onkeypress( self.add_C, 'C' )
+            turtle.onkeypress( self.add_D, 'D' )
+            turtle.onkeypress( self.add_E, 'E' )
+            turtle.onkeypress( self.add_F, 'F' )
+            turtle.onkeypress( self.add_G, 'G' )
+            turtle.onkeypress( self.add_H, 'H' )
+            turtle.onkeypress( self.add_I, 'I' )
+            turtle.onkeypress( self.add_J, 'J' )
+            turtle.onkeypress( self.add_K, 'K' )
+            turtle.onkeypress( self.add_L, 'L' )
+            turtle.onkeypress( self.add_M, 'M' )
+            turtle.onkeypress( self.add_N, 'N' )
+            turtle.onkeypress( self.add_O, 'O' )
+            turtle.onkeypress( self.add_P, 'P' )
+            turtle.onkeypress( self.add_Q, 'Q' )
+            turtle.onkeypress( self.add_R, 'R' )
+            turtle.onkeypress( self.add_S, 'S' )
+            turtle.onkeypress( self.add_T, 'T' )
+            turtle.onkeypress( self.add_U, 'U' )
+            turtle.onkeypress( self.add_V, 'V' )
+            turtle.onkeypress( self.add_W, 'W' )
+            turtle.onkeypress( self.add_X, 'X' )
+            turtle.onkeypress( self.add_Y, 'Y' )
+            turtle.onkeypress( self.add_Z, 'Z' )
+        if self.lang == 'ARB':
+            turtle.onkeypress( self.add_hmzea, 'H' )
+            turtle.onkeypress( self.add_hmzem, 'Y' )
+            turtle.onkeypress( self.add_za,'slash')
+            turtle.onkeypress( self.add_6a,'quoteright')
+            turtle.onkeypress( self.add_kaf, 'semicolon' )
+            turtle.onkeypress( self.add_waw, 'comma' )
+            turtle.onkeypress( self.add_zen, 'period' )
+            turtle.onkeypress( self.add_thal,'quoteleft')
+            turtle.onkeypress( self.add_dal,'bracketright')
+            turtle.onkeypress( self.add_jim,'bracketleft')
+            turtle.onkeypress( self.add_shin, 'a' )
+            #turtle.onkeypress( self.add_la, 'b' )
+            turtle.onkeypress( self.add_hmzew, 'c' )
+            turtle.onkeypress( self.add_ya, 'd' )
+            turtle.onkeypress( self.add_tha, 'e' )
+            turtle.onkeypress( self.add_ba, 'f' )
+            turtle.onkeypress( self.add_lam, 'g' )
+            turtle.onkeypress( self.add_alf, 'h' )
+            turtle.onkeypress( self.add_ha, 'i' )
+            turtle.onkeypress( self.add_ta, 'j' )
+            turtle.onkeypress( self.add_non, 'k' )
+            turtle.onkeypress( self.add_mim, 'l' )
+            turtle.onkeypress( self.add_tam, 'm' )
+            turtle.onkeypress( self.add_alfm, 'n' )
+            turtle.onkeypress( self.add_5a, 'o' )
+            turtle.onkeypress( self.add_7a, 'p' )
+            turtle.onkeypress( self.add_dad, 'q' )
+            turtle.onkeypress( self.add_qaf, 'r' )
+            turtle.onkeypress( self.add_sin, 's' )
+            turtle.onkeypress( self.add_fa, 't' )
+            turtle.onkeypress( self.add_3en, 'u' )
+            turtle.onkeypress( self.add_ra, 'v' )
+            turtle.onkeypress( self.add_sad, 'w' )
+            turtle.onkeypress( self.add_hmze, 'x' )
+            turtle.onkeypress( self.add_4en, 'y' )
+            turtle.onkeypress( self.add_hmzek, 'z' )
         #Start listeners
         turtle.listen()
 
@@ -614,6 +655,177 @@ class TextInput(metaclass=ABCMeta):
         self.write_msg()
         print(self.new_msg)
     def send(self):
-        self.view.msg_queue.insert(0,"Me: \r"+self.view.textbox.new_msg)
+        self.new_msg=self.new_msg.replace("<3",str(chr(9829)))
+        self.new_msg=self.new_msg.replace(":)",str(chr(9786)))
+        self.new_msg=self.new_msg.replace(":(",str(chr(9785)))
+        self.new_msg=self.new_msg.replace("<flower1>",str(chr(10047)))
+        self.new_msg=self.new_msg.replace("<flower2>",str(chr(10048)))
+        self.new_msg=self.new_msg.replace("<flower3>",str(chr(10049)))
+        self.new_msg=self.new_msg.replace("<snow>",str(chr(10052)))
+        self.new_msg=self.new_msg.replace("<cross1>",str(chr(10013)))
+        self.new_msg=self.new_msg.replace("<cross2>",str(chr(10014)))
+        self.new_msg=self.new_msg.replace("<cross3>",str(chr(10015)))
+        self.new_msg=self.new_msg.replace("<star>",str(chr(11088)))
+        self.new_msg=self.new_msg.replace("<=>",str(chr(10234)))
+        self.new_msg=self.new_msg.replace("=>",str(chr(10233)))
+        self.new_msg=self.new_msg.replace("<=",str(chr(10232)))
+        self.new_msg=self.new_msg.replace("<music1>",str(chr(9833)))
+        self.new_msg=self.new_msg.replace("<music2>",str(chr(9834)))
+        self.new_msg=self.new_msg.replace("<music3>",str(chr(9835)))
+        self.new_msg=self.new_msg.replace("<music4>",str(chr(9836)))
+        
+        if len(self.view.textbox.new_msg) < self.view.textbox.letts:
+            self.view.msg_queue.insert(0,"Me: \r"+self.view.textbox.new_msg)
+        else:
+            to_insert = ' '
+            for l in range(int(len(self.new_msg)/self.letts)+1):
+                if l < int(len(self.new_msg)/self.letts):
+            
+                    to_insert+=self.new_msg[(l*40):((l+1)*40)] + " \r"
+                    
+                else:
+                    
+                    to_insert+=self.new_msg[(l*40):len(self.new_msg)]+ " \r"
+            self.view.msg_queue.insert(0,"Me: \r"+to_insert)
         self.view.send_msg()
         self.writer.clear()
+    def add_alf(self):
+        self.new_msg+=str(chr(1575))
+        self.write_msg()
+        print(self.new_msg)
+    def add_ba(self):
+        self.new_msg+=str(chr(1576))
+        self.write_msg()
+        print(self.new_msg)
+    def add_ta(self):
+        self.new_msg+=str(chr(1578))
+        self.write_msg()
+        print(self.new_msg)
+    def add_tha(self):
+        self.new_msg+=str(chr(1579))
+        self.write_msg()
+        print(self.new_msg)
+    def add_jim(self):
+        self.new_msg+=str(chr(1580))
+        self.write_msg()
+        print(self.new_msg)
+    def add_7a(self):
+        self.new_msg+=str(chr(1581))
+        self.write_msg()
+        print(self.new_msg)
+    def add_5a(self):
+        self.new_msg+=str(chr(1582))
+        self.write_msg()
+        print(self.new_msg)
+    def add_dal(self):
+        self.new_msg+=str(chr(1583))
+        self.write_msg()
+        print(self.new_msg)
+    def add_thal(self):
+        self.new_msg+=str(chr(1584))
+        self.write_msg()
+        print(self.new_msg)
+    def add_ra(self):
+        self.new_msg+=str(chr(1585))
+        self.write_msg()
+        print(self.new_msg)
+    def add_zen(self):
+        self.new_msg+=str(chr(1586))
+        self.write_msg()
+        print(self.new_msg)
+    def add_sin(self):
+        self.new_msg+=str(chr(1587))
+        self.write_msg()
+        print(self.new_msg)
+    def add_shin(self):
+        self.new_msg+=str(chr(1588))
+        self.write_msg()
+        print(self.new_msg)
+    def add_sad(self):
+        self.new_msg+=str(chr(1589))
+        self.write_msg()
+        print(self.new_msg)
+    def add_dad(self):
+        self.new_msg+=str(chr(1590))
+        self.write_msg()
+        print(self.new_msg)
+    def add_6a(self):
+        self.new_msg+=str(chr(1591))
+        self.write_msg()
+        print(self.new_msg)
+    def add_za(self):
+        self.new_msg+=str(chr(1592))
+        self.write_msg()
+        print(self.new_msg)
+    def add_3en(self):
+        self.new_msg+=str(chr(1593))
+        self.write_msg()
+        print(self.new_msg)
+    def add_4en(self):
+        self.new_msg+=str(chr(1594))
+        self.write_msg()
+        print(self.new_msg)
+    def add_fa(self):
+        self.new_msg+=str(chr(1601))
+        self.write_msg()
+        print(self.new_msg)
+    def add_qaf(self):
+        self.new_msg+=str(chr(1602))
+        self.write_msg()
+        print(self.new_msg)
+    def add_kaf(self):
+        self.new_msg+=str(chr(1603))
+        self.write_msg()
+        print(self.new_msg)
+    def add_lam(self):
+        self.new_msg+=str(chr(1604))
+        self.write_msg()
+        print(self.new_msg)
+    def add_mim(self):
+        self.new_msg+=str(chr(1605))
+        self.write_msg()
+        print(self.new_msg)
+    def add_non(self):
+        self.new_msg+=str(chr(1606))
+        self.write_msg()
+        print(self.new_msg)
+    def add_ha(self):
+        self.new_msg+=str(chr(1607))
+        self.write_msg()
+        print(self.new_msg)
+    def add_waw(self):
+        self.new_msg+=str(chr(1608))
+        self.write_msg()
+        print(self.new_msg)
+    def add_ya(self):
+        self.new_msg+=str(chr(1610))
+        self.write_msg()
+        print(self.new_msg)
+    def add_hmze(self):
+        self.new_msg+=str(chr(1569))
+        self.write_msg()
+        print(self.new_msg)
+    def add_hmzew(self):
+        self.new_msg+=str(chr(1572))
+        self.write_msg()
+        print(self.new_msg)
+    def add_hmzek(self):
+        self.new_msg+=str(chr(1574))
+        self.write_msg()
+        print(self.new_msg)
+    def add_alfm(self):
+        self.new_msg+=str(chr(1609))
+        self.write_msg()
+        print(self.new_msg)
+    def add_tam(self):
+        self.new_msg+=str(chr(1577))
+        self.write_msg()
+        print(self.new_msg)
+    def add_hmzea(self):
+        self.new_msg+=str(chr(1571))
+        self.write_msg()
+        print(self.new_msg)
+    def add_hmzem(self):
+        self.new_msg+=str(chr(1573))
+        self.write_msg()
+        print(self.new_msg)
