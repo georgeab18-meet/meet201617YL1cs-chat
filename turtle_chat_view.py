@@ -134,7 +134,7 @@ class SendButton(Button):
         self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<snow>",str(chr(10052)))
         self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<cross1>",str(chr(10013)))
         self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<cross2>",str(chr(10014)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<cross3>",str(chr(10015)))
+        self.view.textbox.new_mskg=self.view.textbox.new_msg.replace("<cross3>",str(chr(10015)))
         self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<star>",str(chr(11088)))
         self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<=>",str(chr(10234)))
         self.view.textbox.new_msg=self.view.textbox.new_msg.replace("=>",str(chr(10233)))
@@ -214,7 +214,7 @@ class View:
         self.butt = SendButton(view = self)
         self.textbox = TextBox(view = self)
         self.textbox.draw_box()
-        self.textbox.lang = 'ARB'
+        self.textbox.lang = 'ENG'
         self.textbox.setup_listeners()
         self.msg_queue=[]
         ###
@@ -289,6 +289,7 @@ class View:
         #Add the message to the queue either using insert (to put at the beginning)
         #or append (to put at the end).
         self.display_msg()
+        print(self.msg_queue[0]+"!")
         #Then, call the display_msg method to update the display
 
     def display_msg(self):
@@ -313,9 +314,10 @@ class View:
 #view in different ways.                                #
 #########################################################
 
-my_view=View()
+#m
 _WAIT_TIME=200 #Time between check for new message, ms
 if __name__=="__main__":
+    my_view=View()
     def check() :
         msg_in=my_view.client.receive()
         msg_in=my_view.get_client().receive()
