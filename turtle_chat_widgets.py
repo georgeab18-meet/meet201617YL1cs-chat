@@ -675,7 +675,7 @@ class TextInput(metaclass=ABCMeta):
         self.new_msg=self.new_msg.replace("<music4>",str(chr(9836)))
         
         if len(self.view.textbox.new_msg) < self.view.textbox.letts:
-            self.view.msg_queue.insert(0,"Me: \r"+self.view.textbox.new_msg)
+            self.view.msg_queue.insert(0,self.view.user+": \r"+self.view.textbox.new_msg)
         else:
             to_insert = ' '
             for l in range(int(len(self.new_msg)/self.letts)+1):
@@ -686,7 +686,7 @@ class TextInput(metaclass=ABCMeta):
                 else:
                     
                     to_insert+=self.new_msg[(l*40):len(self.new_msg)]+ " \r"
-            self.view.msg_queue.insert(0,"Me: \r"+to_insert)
+            self.view.msg_queue.insert(0,self.view.user+": \r"+to_insert)
         self.view.send_msg()
         self.writer.clear()
     def add_alf(self):

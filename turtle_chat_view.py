@@ -66,6 +66,61 @@ class TextBox(TextInput):
         self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()+self.height)
         self.drawer.end_fill()'''
         self.writer.clear()
+        if self.new_msg.endswith(">"):
+            if self.new_msg.endswith("<!>"):
+                self.new_msg = self.new_msg.replace("<!>","")
+                if self.lang == 'ENG':
+                    self.lang = 'ARB'
+                    self.setup_listeners()
+                elif self.lang == 'ARB':
+                    self.lang = 'ENG'
+                    self.setup_listeners()
+            elif self.new_msg.endswith("<change_username>"):
+                self.view.sending_mode = False
+                prevu = self.view.user
+                self.new_msg = self.new_msg.replace("<change_username>","")
+                self.view.user = self.view.butt.fun()
+                self.view.sending_mode = True
+                if prevu != "Me":
+                    self.view.client.send(prevu + " changed his name to " + self.view.user)
+                else:
+                    self.view.client.send("Partner changed his name to " + self.view.user)
+                for msg in range(len(self.view.msg_queue)):
+                    self.view.msg_queue[msg]=self.view.msg_queue[msg].replace(prevu,self.view.user)
+                self.new_msg = ""
+            #elif self.new_msg.endswith("<change_partnername>"):
+             #   prevp = self.view.partner
+              #  self.view.partner=input("Enter the new partner name: \r")
+               # for msg in range(len(self.view.msg_queue)):
+                #    self.view.msg_queue[msg]=self.view.msg_queue[msg].replace(prevp,self.view.partner)
+                #self.new_msg = self.new_msg.replace("<change_partnername>","")
+            elif self.new_msg.endswith("<help>"):
+                self.new_msg = self.new_msg.replace("<help>","")
+                for tur in self.view.msg_queue_turtles:
+                    tur.clear()
+                intro = "Welcome to TurtleChat, \r if you want to get back to the \r chat room type <chat>, \r \r for the emojis list type <emoji>, \r \r to change the language from English to \r Arabic or/and vice versa type <!>, \r \r if you want to change your username \r type the new user name \r and then <change_ username>, \r \r enjoy the chatting!"
+                self.view.msg_queue_turtles[-3].write(intro)
+            elif self.new_msg.endswith("<chat>"):
+                self.view.display_msg()
+                self.new_msg = self.new_msg.replace("<chat>","")
+            elif self.new_msg.endswith("<emoji>"):
+                self.new_msg = self.new_msg.replace("<emoji>","")
+                for turt in self.view.msg_queue_turtles:
+                    turt.clear()
+                emoji_list = "<3"+str(chr(9829))+"\r :)"+str(chr(9786))+"\r :("+str(chr(9785))+"\r <flower1>"+str(chr(10047))+"\r <flower2>"+str(chr(10048))+"\r <flower3>"+str(chr(10049))+"\r <snow>"+str(chr(10052))+"\r <cross1>"+str(chr(10013))+"\r <cross2>"+str(chr(10014))+"\r <cross3>"+str(chr(10015))+"\r <star>"+str(chr(11088))+"\r <=>"+str(chr(10234))+"\r =>"+str(chr(10233))+"\r <="+str(chr(10232))+"\r <music1>"+str(chr(9833))+"\r <music2>"+str(chr(9834))+"\r <music3>"+str(chr(9835))+"\r <music4>"+str(chr(9836))
+                self.view.msg_queue_turtles[-4].write(emoji_list)
+            elif self.new_msg.endswith("<9009>"):
+                self.view.client = self.view.client_9009
+                self.new_msg = self.new_msg.replace("<9009>","")
+            elif self.new_msg.endswith("<9010>"):
+                self.view.client = self.view.client_9010
+                self.new_msg = self.new_msg.replace("<9010>","")
+            elif self.new_msg.endswith("<9011>"):
+                self.view.client = self.view.client_9011
+                self.new_msg = self.new_msg.replace("<9011>","")
+            elif self.new_msg.endswith("<9012>"):
+                self.view.client = self.view.client_9012
+                self.new_msg = self.new_msg.replace("<9012>","")
         if len(self.new_msg) < self.letts:
             self.writer.write(self.new_msg, align = 'center')
         else:
@@ -125,41 +180,43 @@ class SendButton(Button):
         self.turtle.onclick(self.fun) #Link listener to button function
         turtle.listen() #Start listener
     def fun(self,x = None, y = None):
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<3",str(chr(9829)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace(":)",str(chr(9786)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace(":(",str(chr(9785)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<flower1>",str(chr(10047)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<flower2>",str(chr(10048)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<flower3>",str(chr(10049)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<snow>",str(chr(10052)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<cross1>",str(chr(10013)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<cross2>",str(chr(10014)))
-        self.view.textbox.new_mskg=self.view.textbox.new_msg.replace("<cross3>",str(chr(10015)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<star>",str(chr(11088)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<=>",str(chr(10234)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("=>",str(chr(10233)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<=",str(chr(10232)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music1>",str(chr(9833)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music2>",str(chr(9834)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music3>",str(chr(9835)))
-        self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music4>",str(chr(9836)))
-        if len(self.view.textbox.new_msg) < self.view.textbox.letts:
-            self.view.msg_queue.insert(0,"Me: \r"+self.view.textbox.new_msg)
-        else:
-            to_insert = ' '
-            for l in range(int(len(self.view.textbox.new_msg)/self.view.textbox.letts)+1):
-                if l < int(len(self.view.textbox.new_msg)/self.view.textbox.letts):
+        if self.view.sending_mode == True:
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<3",str(chr(9829)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace(":)",str(chr(9786)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace(":(",str(chr(9785)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<flower1>",str(chr(10047)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<flower2>",str(chr(10048)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<flower3>",str(chr(10049)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<snow>",str(chr(10052)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<cross1>",str(chr(10013)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<cross2>",str(chr(10014)))
+            self.view.textbox.new_mskg=self.view.textbox.new_msg.replace("<cross3>",str(chr(10015)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<star>",str(chr(11088)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<=>",str(chr(10234)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("=>",str(chr(10233)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<=",str(chr(10232)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music1>",str(chr(9833)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music2>",str(chr(9834)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music3>",str(chr(9835)))
+            self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<music4>",str(chr(9836)))
+            if len(self.view.textbox.new_msg) < self.view.textbox.letts:
+                self.view.msg_queue.insert(0,self.view.user+": \r"+self.view.textbox.new_msg)
+            else:
+                to_insert = ' '
+                for l in range(int(len(self.view.textbox.new_msg)/self.view.textbox.letts)+1):
+                    if l < int(len(self.view.textbox.new_msg)/self.view.textbox.letts):
             
-                    to_insert+=self.view.textbox.new_msg[(l*self.view.textbox.letts):((l+1)*self.view.textbox.letts)] + " \r"
+                        to_insert+=self.view.textbox.new_msg[(l*self.view.textbox.letts):((l+1)*self.view.textbox.letts)] + " \r"
                     
-                else:
+                    else:
                     
-                    to_insert+=self.view.textbox.new_msg[(l*self.view.textbox.letts):len(self.view.textbox.new_msg)]+ " \r"
-            self.view.msg_queue.insert(0,"Me: \r"+to_insert)
+                        to_insert+=self.view.textbox.new_msg[(l*self.view.textbox.letts):len(self.view.textbox.new_msg)]+ " \r"
+                self.view.msg_queue.insert(0,self.view.user+": \r"+to_insert)
         
-        self.view.send_msg()
-        self.view.textbox.writer.clear()
-        
+            self.view.send_msg()
+            self.view.textbox.writer.clear()
+        else:
+            return(self.view.textbox.new_msg)
         
         
 ##################################################################
@@ -174,8 +231,8 @@ class SendButton(Button):
 class View:
     
 
-    def __init__(self,username='Amazing Me',partner_name='Partner'):
-        _MSG_LOG_LENGTH=3 #Number of messages to retain in view
+    def __init__(self,username='Me',partner_name='Partner',client_port=None):
+        _MSG_LOG_LENGTH=2 #Number of messages to retain in view
         _SCREEN_WIDTH=300
         _SCREEN_HEIGHT=600
         _LINE_SPACING=round(_SCREEN_HEIGHT/2/(_MSG_LOG_LENGTH+1))
@@ -188,12 +245,16 @@ class View:
         ###
         self.user = username
         self.partner = partner_name
+        self.sending_mode = True
         ###
         #Make a new client object and store it in this instance of View
         #(i.e. self).  The name of the instance should be my_client
         ###
-        my_client = Client()
-        self.client = my_client
+        self.client_9009 = Client()
+        self.client_9010 = Client(port=9010)
+        self.client_9011 = Client(port=9011)
+        self.client_9012 = Client(port=9012)
+        self.client = self.client_9009
         ###
         #Set screen dimensions using turtle.setup
         #You can get help on this function, as with other turtle functions,
@@ -217,8 +278,9 @@ class View:
         self.textbox.lang = 'ENG'
         self.textbox.setup_listeners()
         self.msg_queue=[]
+        self.msg_queue.insert(0,"if you need help type: \r <help>")
         ###
-
+        
         ###
         #Create one turtle object for each message to display.
         #You can use the clear() and write() methods to erase
@@ -226,12 +288,13 @@ class View:
         ###
         self.msg_queue_turtles = list()
         for i in range(4):
-            self.msg_queue.insert(i,"")
+            self.msg_queue.append("")
             self.msg_queue_turtles.append(turtle.clone())
         for tutu in range(4):
             self.msg_queue_turtles[tutu].hideturtle()
             self.msg_queue_turtles[tutu].penup()
             self.msg_queue_turtles[tutu].goto(-100,tutu*(_LINE_SPACING))
+        self.msg_queue_turtles[-3].write("Welcome to TurtleChat, \r if you’d like to discuss Music enter <9010>, \r if you’d like to discuss Sports enter <9011>, \r if you’d like to to discuss Science enter <9012>, \r if you’d like to discuss Anything enter <9009>")
         ###
         #Create a TextBox instance and a SendButton instance and
         #Store them inside of this instance
@@ -252,7 +315,10 @@ class View:
         It should call self.display_msg() to cause the message
         display to be updated.
         '''
-        self.client.send(self.textbox.new_msg)
+        if self.user != "Me":
+            self.client.send(self.user+": \r"+self.textbox.new_msg)
+        else:
+            self.client.send("Partner:"+"\r"+self.textbox.new_msg)
         self.display_msg()
         self.textbox.clear_msg()
 
@@ -284,12 +350,11 @@ class View:
                     - this should be displayed on the screen
         '''
         #print(msg) #Debug - print message
-        show_this_msg=self.partner+' says:\r'+ msg
-        self.msg_queue.insert(0,show_this_msg)
+        self.msg_queue.insert(0,msg)
         #Add the message to the queue either using insert (to put at the beginning)
         #or append (to put at the end).
         self.display_msg()
-        print(self.msg_queue[0]+"!")
+        #print(self.msg_queue[0]+"!")
         #Then, call the display_msg method to update the display
 
     def display_msg(self):
@@ -300,7 +365,11 @@ class View:
         for i in range(4):
             self.msg_queue_turtles[i].clear()
         for t in range(4):
-            self.msg_queue_turtles[t].write(self.msg_queue[t],font=('Arial',15,'normal'))
+            if self.msg_queue[t].startswith(self.user):
+                self.msg_queue_turtles[t].pencolor("red")
+            else:
+                self.msg_queue_turtles[t].pencolor("green")
+            self.msg_queue_turtles[t].write(self.msg_queue[t],font=('Arial',10,'normal'))
 
     def get_client(self):
         return self.client
@@ -320,7 +389,7 @@ if __name__=="__main__":
     my_view=View()
     def check() :
         msg_in=my_view.client.receive()
-        msg_in=my_view.get_client().receive()
+        #msg_in=my_view.get_client().receive()
         if not(msg_in is None):
             if msg_in==Client._END_MSG:
                 print('End message received')
