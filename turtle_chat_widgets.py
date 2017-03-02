@@ -147,7 +147,12 @@ class TextInput(metaclass=ABCMeta):
 
         #To find text key names, you can refer to
         #http://www.tcl.tk/man/tcl8.4/TkCmd/keysyms.htm
-        turtle.onkeypress( self.send,"Return")
+        turtle.onkeypress( self.go_up,"Up")
+        turtle.onkeypress( self.go_down,"Down")
+        turtle.onkeypress( self.change_bgp,"Left")
+        turtle.onkeypress( self.change_bgn,"Right")
+        turtle.onkeypress( self.view.butt.fun,"Return")
+        turtle.onkeyrelease( self.view.butt.rel,"Return")
         #Numbers
         turtle.onkeypress( self.add_0, '0' )
         turtle.onkeypress( self.add_1, '1' )
@@ -196,6 +201,60 @@ class TextInput(metaclass=ABCMeta):
         turtle.onkeypress( self.add_brackleft,'bracketleft')
 
         #Lower-case letters
+        if self.lang == "BRL":
+            turtle.onkeypress( self.add_bspace, 'space' )
+            turtle.onkeypress( self.add_ba, 'a' )
+            turtle.onkeypress( self.add_bb, 'b' )
+            turtle.onkeypress( self.add_bc, 'c' )
+            turtle.onkeypress( self.add_bd, 'd' )
+            turtle.onkeypress( self.add_be, 'e' )
+            turtle.onkeypress( self.add_bf, 'f' )
+            turtle.onkeypress( self.add_bg, 'g' )
+            turtle.onkeypress( self.add_bh, 'h' )
+            turtle.onkeypress( self.add_bi, 'i' )
+            turtle.onkeypress( self.add_bj, 'j' )
+            turtle.onkeypress( self.add_bk, 'k' )
+            turtle.onkeypress( self.add_bl, 'l' )
+            turtle.onkeypress( self.add_bm, 'm' )
+            turtle.onkeypress( self.add_bn, 'n' )
+            turtle.onkeypress( self.add_bo, 'o' )
+            turtle.onkeypress( self.add_bp, 'p' )
+            turtle.onkeypress( self.add_bq, 'q' )
+            turtle.onkeypress( self.add_br, 'r' )
+            turtle.onkeypress( self.add_bs, 's' )
+            turtle.onkeypress( self.add_bt, 't' )
+            turtle.onkeypress( self.add_bu, 'u' )
+            turtle.onkeypress( self.add_bv, 'v' )
+            turtle.onkeypress( self.add_bw, 'w' )
+            turtle.onkeypress( self.add_bx, 'x' )
+            turtle.onkeypress( self.add_by, 'y' )
+            turtle.onkeypress( self.add_bz, 'z' )
+            turtle.onkeypress( self.add_ba, 'A' )
+            turtle.onkeypress( self.add_bb, 'B' )
+            turtle.onkeypress( self.add_bc, 'C' )
+            turtle.onkeypress( self.add_bd, 'D' )
+            turtle.onkeypress( self.add_be, 'E' )
+            turtle.onkeypress( self.add_bf, 'F' )
+            turtle.onkeypress( self.add_bg, 'G' )
+            turtle.onkeypress( self.add_bh, 'H' )
+            turtle.onkeypress( self.add_bi, 'I' )
+            turtle.onkeypress( self.add_bj, 'J' )
+            turtle.onkeypress( self.add_bk, 'K' )
+            turtle.onkeypress( self.add_bl, 'L' )
+            turtle.onkeypress( self.add_bm, 'M' )
+            turtle.onkeypress( self.add_bn, 'N' )
+            turtle.onkeypress( self.add_bo, 'O' )
+            turtle.onkeypress( self.add_bp, 'P' )
+            turtle.onkeypress( self.add_bq, 'Q' )
+            turtle.onkeypress( self.add_br, 'R' )
+            turtle.onkeypress( self.add_bs, 'S' )
+            turtle.onkeypress( self.add_bt, 'T' )
+            turtle.onkeypress( self.add_bu, 'U' )
+            turtle.onkeypress( self.add_bv, 'V' )
+            turtle.onkeypress( self.add_bw, 'W' )
+            turtle.onkeypress( self.add_bx, 'X' )
+            turtle.onkeypress( self.add_by, 'Y' )
+            turtle.onkeypress( self.add_bz, 'Z' )
         if self.lang == "ENG":
             turtle.onkeypress( self.add_a, 'a' )
             turtle.onkeypress( self.add_b, 'b' )
@@ -267,7 +326,7 @@ class TextInput(metaclass=ABCMeta):
             turtle.onkeypress( self.add_hmzew, 'c' )
             turtle.onkeypress( self.add_ya, 'd' )
             turtle.onkeypress( self.add_tha, 'e' )
-            turtle.onkeypress( self.add_ba, 'f' )
+            turtle.onkeypress( self.add_ba2, 'f' )
             turtle.onkeypress( self.add_lam, 'g' )
             turtle.onkeypress( self.add_alf, 'h' )
             turtle.onkeypress( self.add_ha, 'i' )
@@ -295,6 +354,10 @@ class TextInput(metaclass=ABCMeta):
     #letters from message.
     def add_space(self):
         self.new_msg+=' '
+        self.write_msg()
+        print(self.new_msg)
+    def add_bspace(self):
+        self.new_msg+=' '*2
         self.write_msg()
         print(self.new_msg)
     def add_a(self):
@@ -693,7 +756,7 @@ class TextInput(metaclass=ABCMeta):
         self.new_msg+=str(chr(1575))
         self.write_msg()
         print(self.new_msg)
-    def add_ba(self):
+    def add_ba2(self):
         self.new_msg+=str(chr(1576))
         self.write_msg()
         print(self.new_msg)
@@ -827,5 +890,129 @@ class TextInput(metaclass=ABCMeta):
         print(self.new_msg)
     def add_hmzem(self):
         self.new_msg+=str(chr(1573))
+        self.write_msg()
+        print(self.new_msg)
+    def change_bgn(self):
+        if self.view.bg_in < 3:
+            self.view.bg_in = self.view.bg_in + 1
+        else:
+            self.view.bg_in = 0
+        turtle.bgpic(self.view.bgs_list[self.view.bg_in])
+    def change_bgp(self):
+        if self.view.bg_in > 0:
+            self.view.bg_in = self.view.bg_in - 1
+        else:
+            self.view.bg_in = 3
+        turtle.bgpic(self.view.bgs_list[self.view.bg_in])
+    def go_up(self):
+        if self.view.msg_ind < len(self.view.msg_queue)-4:
+            self.view.msg_ind = self.view.msg_ind+1
+            self.view.display_msg(self.view.msg_ind)
+    def go_down(self):
+        if self.view.msg_ind > 0:
+            self.view.msg_ind = self.view.msg_ind-1
+            self.view.display_msg(self.view.msg_ind)
+    def add_ba(self):
+        self.new_msg+=str(chr(10241))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bb(self):
+        self.new_msg+=str(chr(10243))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bc(self):
+        self.new_msg+=str(chr(10249))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bd(self):
+        self.new_msg+=str(chr(10265))
+        self.write_msg()
+        print(self.new_msg)
+    def add_be(self):
+        self.new_msg+=str(chr(10257))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bf(self):
+        self.new_msg+=str(chr(10251))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bg(self):
+        self.new_msg+=str(chr(10267))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bh(self):
+        self.new_msg+=str(chr(10259))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bi(self):
+        self.new_msg+=str(chr(10250))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bj(self):
+        self.new_msg+=str(chr(10266))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bk(self):
+        self.new_msg+=str(chr(10245))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bl(self):
+        self.new_msg+=str(chr(10247))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bm(self):
+        self.new_msg+=str(chr(10253))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bn(self):
+        self.new_msg+=str(chr(10269))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bo(self):
+        self.new_msg+=str(chr(10261))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bp(self):
+        self.new_msg+=str(chr(10255))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bq(self):
+        self.new_msg+=str(chr(10271))
+        self.write_msg()
+        print(self.new_msg)
+    def add_br(self):
+        self.new_msg+=str(chr(10263))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bs(self):
+        self.new_msg+=str(chr(10254))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bt(self):
+        self.new_msg+=str(chr(10270))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bu(self):
+        self.new_msg+=str(chr(10277))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bv(self):
+        self.new_msg+=str(chr(10279))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bw(self):
+        self.new_msg+=str(chr(10298))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bx(self):
+        self.new_msg+=str(chr(10285))
+        self.write_msg()
+        print(self.new_msg)
+    def add_by(self):
+        self.new_msg+=str(chr(10301))
+        self.write_msg()
+        print(self.new_msg)
+    def add_bz(self):
+        self.new_msg+=str(chr(10293))
         self.write_msg()
         print(self.new_msg)

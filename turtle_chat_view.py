@@ -48,10 +48,13 @@ class TextBox(TextInput):
         self.drawer.penup()
         self.drawer.goto(self.pos)
         self.drawer.pendown()
+        turtle.fillcolor("white")
+        self.drawer.begin_fill()
         self.drawer.goto(self.drawer.xcor()+self.width,self.drawer.ycor())
         self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()-self.height)
         self.drawer.goto(self.drawer.xcor()-self.width,self.drawer.ycor())
         self.drawer.goto(self.drawer.xcor(),self.drawer.ycor()+self.height)
+        self.drawer.end_fill()
     def write_msg(self):
         '''self.drawer = turtle.clone()
         self.drawer.hideturtle()
@@ -73,6 +76,9 @@ class TextBox(TextInput):
                     self.lang = 'ARB'
                     self.setup_listeners()
                 elif self.lang == 'ARB':
+                    self.lang = 'BRL'
+                    self.setup_listeners()
+                elif self.lang == 'BRL':
                     self.lang = 'ENG'
                     self.setup_listeners()
             elif self.new_msg.endswith("<change_username>"):
@@ -98,8 +104,8 @@ class TextBox(TextInput):
                 self.new_msg = self.new_msg.replace("<help>","")
                 for tur in self.view.msg_queue_turtles:
                     tur.clear()
-                intro = "Welcome to TurtleChat, \r if you want to get back to the \r chat room type <chat>, \r \r for the emojis list type <emoji>, \r \r to change the language from English to \r Arabic or/and vice versa type <!>, \r \r if you want to change your username \r type the new user name \r and then <change_ username>, \r \r enjoy the chatting!"
-                self.view.msg_queue_turtles[-3].write(intro)
+                intro = "Welcome to TurtleChat, \r if you want to get back to the \r chat room type <chat>, \r \r for the emojis list type <emoji>, \r \r to change the language the language type <!>, \r \r if you want to change your username \r type the new user name \r and then <change_ username>, \r \r if you want to change the \r background, click left and right \r \r enjoy the chatting!"
+                self.view.msg_queue_turtles[-4].write(intro)
             elif self.new_msg.endswith("<chat>"):
                 self.view.display_msg()
                 self.new_msg = self.new_msg.replace("<chat>","")
@@ -109,6 +115,11 @@ class TextBox(TextInput):
                     turt.clear()
                 emoji_list = "<3"+str(chr(9829))+"\r :)"+str(chr(9786))+"\r :("+str(chr(9785))+"\r <flower1>"+str(chr(10047))+"\r <flower2>"+str(chr(10048))+"\r <flower3>"+str(chr(10049))+"\r <snow>"+str(chr(10052))+"\r <cross1>"+str(chr(10013))+"\r <cross2>"+str(chr(10014))+"\r <cross3>"+str(chr(10015))+"\r <star>"+str(chr(11088))+"\r <=>"+str(chr(10234))+"\r =>"+str(chr(10233))+"\r <="+str(chr(10232))+"\r <music1>"+str(chr(9833))+"\r <music2>"+str(chr(9834))+"\r <music3>"+str(chr(9835))+"\r <music4>"+str(chr(9836))
                 self.view.msg_queue_turtles[-4].write(emoji_list)
+            elif self.new_msg.endswith("<delete>"):
+                self.new_msg = ""
+                self.view.msg_queue.remove(self.view.msg_queue[0])
+                self.view.client.send("<d>")
+                self.view.display_msg(self.view.msg_ind)
             elif self.new_msg.endswith("<9009>"):
                 self.view.client = self.view.client_9009
                 self.new_msg = self.new_msg.replace("<9009>","")
@@ -153,7 +164,7 @@ class TextBox(TextInput):
 #####################################################################################
 
 class SendButton(Button):
-    def __init__(self,my_turtle=None,shape=None,pos=(0,-250),view=None):
+    def __init__(self,my_turtle=None,shape=None,cshape=None,pos=(0,-250),view=None):
         if view == None:
             my_view = View("Me","Partner")
             self.view = my_view
@@ -171,15 +182,26 @@ class SendButton(Button):
         self.turtle.goto(pos)
 
         if shape is None:
+            self.shape = 'square'
             self.turtle.shape('square')
             self.turtle.shapesize(2,10)
         else:
+            self.shape = shape
             turtle.addshape(shape)
             self.turtle.shape(shape)
+        if cshape is None:
+            self.cshape = self.shape
+        else:
+            self.cshape = cshape
+            turtle.addshape(cshape)
         self.turtle.showturtle()
         self.turtle.onclick(self.fun) #Link listener to button function
+        self.turtle.onrelease(self.rel)
         turtle.listen() #Start listener
+    def rel(self,x = None, y = None):
+        self.turtle.shape(self.shape)
     def fun(self,x = None, y = None):
+        self.turtle.shape(self.cshape)
         if self.view.sending_mode == True:
             self.view.textbox.new_msg=self.view.textbox.new_msg.replace("<3",str(chr(9829)))
             self.view.textbox.new_msg=self.view.textbox.new_msg.replace(":)",str(chr(9786)))
@@ -251,9 +273,9 @@ class View:
         #(i.e. self).  The name of the instance should be my_client
         ###
         self.client_9009 = Client()
-        self.client_9010 = Client(port=9010)
-        self.client_9011 = Client(port=9011)
-        self.client_9012 = Client(port=9012)
+        #self.client_9010 = Client(port=9010)
+        #self.client_9011 = Client(port=9011)
+        #self.client_9012 = Client(port=9012)
         self.client = self.client_9009
         ###
         #Set screen dimensions using turtle.setup
@@ -266,14 +288,18 @@ class View:
         #at the Python shell.
         ###
         turtle.setup(300,600)
+        turtle.title("TurtleChat")
         ###
         #This list will store all of the messages.
         #You can add strings to the front of the list using
         #   self.msg_queue.insert(0,a_msg_string)
         #or at the end of the list using
         #   self.msg_queue.append(a_msg_string)
-        self.butt = SendButton(view = self)
+        self.butt = SendButton(shape = "6.gif",cshape = "7.gif",view = self)
         self.textbox = TextBox(view = self)
+        self.bg_in = 0
+        self.msg_ind = 0
+        self.bgs_list = ["1.gif","2.gif","3.gif","4.gif"]
         self.textbox.draw_box()
         self.textbox.lang = 'ENG'
         self.textbox.setup_listeners()
@@ -349,15 +375,18 @@ class View:
         :param msg: a string containing the message received
                     - this should be displayed on the screen
         '''
+        if not msg.endswith("<d>"):
         #print(msg) #Debug - print message
-        self.msg_queue.insert(0,msg)
+            self.msg_queue.insert(0,msg)
         #Add the message to the queue either using insert (to put at the beginning)
         #or append (to put at the end).
-        self.display_msg()
+            self.display_msg()
         #print(self.msg_queue[0]+"!")
         #Then, call the display_msg method to update the display
-
-    def display_msg(self):
+        else:
+            self.msg_queue.remove(self.msg_queue[0])
+            self.display_msg()
+    def display_msg(self,n=0):
         '''
         This method should update the messages displayed in the screen.
         You can get the messages you want from self.msg_queue
@@ -365,11 +394,11 @@ class View:
         for i in range(4):
             self.msg_queue_turtles[i].clear()
         for t in range(4):
-            if self.msg_queue[t].startswith(self.user):
+            if self.msg_queue[t+n].startswith(self.user):
                 self.msg_queue_turtles[t].pencolor("red")
             else:
                 self.msg_queue_turtles[t].pencolor("green")
-            self.msg_queue_turtles[t].write(self.msg_queue[t],font=('Arial',10,'normal'))
+            self.msg_queue_turtles[t].write(self.msg_queue[t+n],font=('Arial',10,'normal'))
 
     def get_client(self):
         return self.client

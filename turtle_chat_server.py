@@ -1,6 +1,6 @@
 # Server for turtle_chat
 import sys, socket, select
-
+open('chat')
 DEFAULT_HOST = 'localhost'
 SOCKET_LIST = []
 RECV_BUFFER = 4096 
